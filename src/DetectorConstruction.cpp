@@ -29,7 +29,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 {
   // WORLD /////////////////////////////////////////////////
 
-  G4double world_size = 15.*m;
+  G4double world_size = 50.*m;
   G4Material* world_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 
   G4Box* world_solid_vol =
@@ -45,10 +45,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // DETECTOR //////////////////////////////////////////////
   // resemble an APA size
-  G4double detector_width   = 2.3*m;
-  G4double detector_height  = 6.0*m;
-  G4double detector_length  = 3.6*m;
-  G4Material* detector_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_lAr");
+  G4double detector_width   = 50*m;
+  G4double detector_height  = 50*m;
+  G4double detector_length  = 50*m;
+  //G4Material* detector_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_lAr");
+  G4Material* detector_mat = new G4Material("XenonGas",54., 131.293*g/mole, 0.055*g/cm3); // Xenon Gas at T=300K, P=10atm
 
   G4Box* detector_solid_vol =
     new G4Box("detector.solid", detector_width/2., detector_height/2., detector_length/2.);

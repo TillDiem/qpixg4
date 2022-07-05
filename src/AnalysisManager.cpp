@@ -337,4 +337,3 @@ int AnalysisManager::ProcessToKey(std::string const & process)
 
     return key;
 }
-

@@ -53,6 +53,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double detector_length  = 3.6*m;
   G4Material* detector_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_lAr");
 
+  // TODO: Setup messanger to activate/deactivate scintillation processses and the corresponding detectors
+
   // MATERIAL PROPERTIES
   // Refernce energy    140nm,   133nm   128nm    120nm    116nm
   G4double energy[5] = {8.85*eV, 9.3*eV, 9.68*eV, 10.3*eV, 10.6*eV}; // Energy for Spectrum, Abs, Rindex of lAr 128 nm = 9.68eV
@@ -100,9 +102,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // TODO: Do I have to set this at all?
   // G4double n_Air[28]={1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.6, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
-  /* G4MaterialPropertiesTable *Air_MPT = new G4MaterialPropertiesTable(); */
-  /* Air_MPT->AddProperty("RINDEX",energy_n,n_Air,28); */
-  /* world_mat->SetMaterialPropertiesTable(Air_MPT); */
+  G4double Rindex_Air[5] = {1.0, 1.0, 1.0, 1.0, 1.0}; // Refractive index for Air ...
+  G4MaterialPropertiesTable *Air_MPT = new G4MaterialPropertiesTable();
+  Air_MPT->AddProperty("RINDEX",energy,Rindex_Air,5);
+  world_mat->SetMaterialPropertiesTable(Air_MPT);
 
 
 

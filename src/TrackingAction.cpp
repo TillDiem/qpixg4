@@ -84,4 +84,3 @@ void TrackingAction::PostUserTrackingAction(const G4Track* track)
     // set process
     particle->SetProcess(track->GetStep()->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName());
 }
-

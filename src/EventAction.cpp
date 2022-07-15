@@ -120,4 +120,3 @@ void EventAction::EndOfEventAction(const G4Event* event)
     // reset event in MC truth manager
     mc_truth_manager->EventReset();
 }
-

@@ -105,4 +105,3 @@ MCParticle * MCTruthManager::GetMCParticle(int const trackID)
     }
     return mc_particle_map_.at(trackID);
 }
-

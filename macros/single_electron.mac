@@ -10,8 +10,12 @@
 /run/initialize
 /random/setSeeds 0 31
 
+
+/process/optical/scintillation/setTrackInfo 1
+
+/Photons/StorePhotons false
 # limit radioactive decays
-/grdm/nucleusLimits 1 35 1 17  # aMin aMax zMin zMax
+#/grdm/nucleusLimits 1 35 1 17  # aMin aMax zMin zMax
 
 # particle type
 # e-, e+, mu-, mu+, neutron, proton, anti_proton, pi-, pi+, pi0, kaon-, kaon+,
@@ -32,7 +36,7 @@
 
 # energy distribution
 /gps/ene/type Mono
-/gps/ene/mono 5 MeV
+/gps/ene/mono 200 MeV
 
 # run
-/run/beamOn 100
+/run/beamOn 1

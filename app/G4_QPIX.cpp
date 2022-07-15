@@ -19,6 +19,7 @@
 #include <G4UIExecutive.hh>
 #include <FTFP_BERT_HP.hh>
 #include <G4EmStandardPhysics_option4.hh>
+#include "G4OpticalPhysics.hh"
 
 
 #include "Randomize.hh"
@@ -48,6 +49,16 @@ int main(int argc, char** argv)
 
   G4VModularPhysicsList* physics_list = new FTFP_BERT_HP();
   physics_list->ReplacePhysics(new G4EmStandardPhysics_option4());
+  G4OpticalPhysics* optical_physics = new G4OpticalPhysics();
+
+  auto opticalParams = G4OpticalParameters::Instance();
+  opticalParams->SetScintTrackSecondariesFirst(true);
+  opticalParams->SetScintTrackInfo(true);
+  //opticalParams->SetMaxNumPhotonsPerStep(100000);
+  opticalParams->SetScintVerboseLevel(1);
+  opticalParams->SetScintByParticleType(true);
+  physics_list->RegisterPhysics(optical_physics);
+
   run_manager->SetUserInitialization(physics_list);
 
   run_manager->SetUserInitialization(new DetectorConstruction());

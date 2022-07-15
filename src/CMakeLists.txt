@@ -20,6 +20,7 @@ SET(SRC   AnalysisManager.cpp
           SteppingAction.cpp
           TrackingAction.cpp
           TrackingSD.cpp
+          TrackingSD_Photon.cpp
           TrackingHit.cpp
           Supernova.cpp
           SupernovaTiming.cpp)
@@ -36,4 +37,3 @@ target_link_libraries(${CMAKE_PROJECT_NAME} ${Geant4_LIBRARIES} ${ROOT_LIBRARIES
 
 # generate ROOT dictionary
 ROOT_GENERATE_DICTIONARY(QPixG4Dict AnalysisManager.h LINKDEF LinkDef.h)
-

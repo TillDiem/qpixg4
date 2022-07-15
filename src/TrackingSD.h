@@ -30,6 +30,8 @@ public:
 private:
   // TrackingHitsCollection* hc_;
   G4GenericMessenger* msg_; // Messenger for configuration parameters
+  G4GenericMessenger* msg_Photons_; // Messenger for configuration parameters
+  G4bool StorePhotons_ = false;
   double Event_Cutoff_;
 };
 #endif

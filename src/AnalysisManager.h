@@ -47,6 +47,7 @@ class AnalysisManager {
         void AddFinalGeneratorParticle(GeneratorParticle const *);
 
         void AddMCParticle(MCParticle const *);
+        void AddMCParticle_Photon(G4Step *);
 
         int ProcessToKey(std::string const &);
 
@@ -65,6 +66,7 @@ class AnalysisManager {
         TFile * tfile_;
         TTree * metadata_;
         TTree * event_tree_;
+	TTree * photon_tree_;
 
         // variables that will go into the metadata tree
         double detector_length_x_;
@@ -143,6 +145,13 @@ class AnalysisManager {
         std::vector< int >    generator_final_particle_pdg_code_;
         std::vector< double > generator_final_particle_mass_;
         std::vector< double > generator_final_particle_charge_;
+
+	// vectors for light tree of photon
+	std::vector< double > photon_final_t_;
+	std::vector< double > photon_final_x_;
+	std::vector< double > photon_final_y_;
+	std::vector< double > photon_final_z_;
+
 
 };
 

@@ -7,6 +7,7 @@
 // -----------------------------------------------------------------------------
 
 #include "AnalysisManager.h"
+#include "G4SystemOfUnits.hh"
 
 AnalysisManager * AnalysisManager::instance_ = 0;
 
@@ -112,6 +113,15 @@ void AnalysisManager::Book(std::string const file_path)
     event_tree_->Branch("hit_energy_deposit", &hit_energy_deposit_);
     event_tree_->Branch("hit_length",         &hit_length_);
     event_tree_->Branch("hit_process_key",    &hit_process_key_);
+
+    //photon tree
+    photon_tree_ = new TTree("photon_tree", "photon tree");
+    photon_tree_->Branch("run",   &run_,   "run/I");
+    photon_tree_->Branch("event", &event_, "event/I");
+    photon_tree_->Branch("photon_final_t",     &photon_final_t_);
+    photon_tree_->Branch("photon_final_x",     &photon_final_x_);
+    photon_tree_->Branch("photon_final_y",     &photon_final_y_);
+    photon_tree_->Branch("photon_final_z",     &photon_final_z_);
 }
 
 //-----------------------------------------------------------------------------
@@ -121,6 +131,7 @@ void AnalysisManager::Save()
     tfile_->cd();
     metadata_->Write();
     event_tree_->Write();
+    photon_tree_->Write();
     tfile_->Close();
 }
 
@@ -193,6 +204,12 @@ void AnalysisManager::EventReset()
     hit_energy_deposit_.clear();
     hit_length_.clear();
     hit_process_key_.clear();
+
+    photon_final_t_.clear();
+    photon_final_x_.clear();
+    photon_final_y_.clear();
+    photon_final_z_.clear();
+
 }
 
 //-----------------------------------------------------------------------------
@@ -200,6 +217,7 @@ void AnalysisManager::EventFill()
 {
     // fill TTree objects per event
     event_tree_->Fill();
+    photon_tree_->Fill();
 }
 
 //-----------------------------------------------------------------------------
@@ -312,6 +330,18 @@ void AnalysisManager::AddMCParticle(MCParticle const * particle)
 }
 
 //-----------------------------------------------------------------------------
+void AnalysisManager::AddMCParticle_Photon(G4Step* aStep)
+{
+	photon_final_t_.push_back(aStep->GetPostStepPoint()->GetGlobalTime()*ns);
+	photon_final_x_.push_back(aStep->GetPostStepPoint()->GetPosition().x());
+	photon_final_y_.push_back(aStep->GetPostStepPoint()->GetPosition().y());
+	photon_final_z_.push_back(aStep->GetPostStepPoint()->GetPosition().z());
+
+}
+
+//-----------------------------------------------------------------------------
+
+
 int AnalysisManager::ProcessToKey(std::string const & process)
 {
     int key = -1;
@@ -334,7 +364,12 @@ int AnalysisManager::ProcessToKey(std::string const & process)
     else if (process.compare("nCapture")             == 0) key = 15;
     else if (process.compare("neutronInelastic")     == 0) key = 16;
     else if (process.compare("photonNuclear")        == 0) key = 17;
+    else if (process.compare("OpAbsorption")         == 0) key = 18;
+    else if (process.compare("Scintillation")        == 0) key = 19;
+    else if (process.compare("protonInelastic")      == 0) key = 20;
+    else if (process.compare("OpRayleigh")           == 0) key = 21;
+    else if (process.compare("NoProcess")            == 0) key = -999;
+    else std::cout << "Process " << process << " not found" << std::endl;
 
     return key;
 }
-

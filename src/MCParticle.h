@@ -32,18 +32,18 @@
 //     std::string    process_ = "unknown";
 //     double         energy_deposit_ = 0;
 //     double         length_ = 0;
-// 
+//
 //     TLorentzVector Position()      const { return position_;       }
 //     TLorentzVector Momentum()      const { return momentum_;       }
 //     std::string    Process()       const { return process_;        }
 //     double         EnergyDeposit() const { return energy_deposit_; }
 //     double         Length()        const { return length_;         }
-// 
+//
 //     double X()  const { return position_.X();  }
 //     double Y()  const { return position_.Y();  }
 //     double Z()  const { return position_.Z();  }
 //     double T()  const { return position_.T();  }
-// 
+//
 //     double Px() const { return momentum_.Px(); }
 //     double Py() const { return momentum_.Py(); }
 //     double Pz() const { return momentum_.Pz(); }
@@ -88,6 +88,7 @@ class MCParticle
         // void AddTrajectoryPoint(const TrajectoryPoint &);
         void AddTrajectoryHit(TrajectoryHit const &);
         void AddTrajectoryHit(G4Step const *);
+        void AddTrajectoryHit_Photon(G4Step const *);
 
         void AddDaughter(int const);
 
@@ -147,4 +148,3 @@ class MCParticle
 };
 
 #endif
-

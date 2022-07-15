@@ -31,6 +31,11 @@ TrackingSD::TrackingSD(const G4String& sd_name, const G4String& hc_name):
   msg_ = new G4GenericMessenger(this, "/Supernova/", "Control commands of the supernova generator.");
   msg_->DeclareProperty("Event_Cutoff", Event_Cutoff_,  "window to simulate the times").SetUnit("ns");
 
+  // Messenger to set the possibility of tracking the optical photon hits in the main lAr APA
+  // Otherwise only their endpoints will be stored in the TrackingSD_Photon class on the extra layors around the APA
+  msg_Photons_ = new G4GenericMessenger(this, "/Photons/", "Control commands for photon storage and generation");
+  msg_Photons_->DeclareProperty("StorePhotons", StorePhotons_, "Store photon hits in the APA - for debugging purposes");
+
 }
 
 
@@ -40,38 +45,21 @@ TrackingSD::~TrackingSD()
 }
 
 
-// void TrackingSD::Initialize(G4HCofThisEvent* hce)
-// {
-//   // Create hits collection
-//   hc_ = new TrackingHitsCollection(SensitiveDetectorName, collectionName[0]);
-//   // Add this collection in hce
-//   G4int hcid = G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]);
-//   hce->AddHitsCollection(hcid, hc_);
-// }
-
-
 G4bool TrackingSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-  G4double edep = aStep->GetTotalEnergyDeposit();
-
-  // if (edep==0.) return false;
-  if (edep < 1. *keV ) return false;
-
-  if (Event_Cutoff_ != 0.0)
+  // Do not store optical photons in the hit variables unless the user wants to - mostly debugging
+  if( !StorePhotons_ && aStep->GetTrack()->GetParticleDefinition()->GetParticleName() == "opticalphoton" )
   {
-    // G4StepPoint* preStepPoint = aStep->GetPreStepPoint();
-    G4StepPoint* preStepPoint = aStep->GetPostStepPoint();
-    G4double hitTime = preStepPoint->GetGlobalTime(); 
-    // if (hitTime<0. || hitTime>Event_Cutoff_) return false;
-    if (hitTime>Event_Cutoff_) return false;
+	  return false;
   }
 
-  // TrackingHit* newHit = new TrackingHit();
-
-  // newHit->SetEdep(edep);
-  // newHit->SetPosition(aStep->GetPostStepPoint()->GetPosition());
-
-  // hc_->insert(newHit);
+  G4double edep = aStep->GetTotalEnergyDeposit();
+  if (Event_Cutoff_ != 0.0)
+  {
+    G4StepPoint* preStepPoint = aStep->GetPostStepPoint();
+    G4double hitTime = preStepPoint->GetGlobalTime();
+    if (hitTime>Event_Cutoff_) return false;
+  }
 
   //---------------------------------------------------------------------------
   // begin add hit to MCParticle
@@ -82,6 +70,7 @@ G4bool TrackingSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 
   // get MC particle
   MCParticle * particle = mc_truth_manager->GetMCParticle(aStep->GetTrack()->GetTrackID());
+
 
   // add hit to MC particle
   particle->AddTrajectoryHit(aStep);
@@ -102,4 +91,3 @@ G4bool TrackingSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 //     << "-------->Hits Collection: in this event there are " << nofHits
 //     << " hits in the tracker." << G4endl;
 // }
-

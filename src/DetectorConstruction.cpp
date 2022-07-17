@@ -21,7 +21,13 @@
 
 
 DetectorConstruction::DetectorConstruction(): G4VUserDetectorConstruction()
-{}
+{
+ det_mesg_ = new G4GenericMessenger(this, "/Det/", "Control commands for Detector Properties");
+ det_mesg_->DeclareProperty("rayleigh", rayleigh_, "Name of the detector");
+ det_mesg_->DeclareProperty("width", width_, "Width (X) of the detector - 2.3m").SetUnit("m");
+ det_mesg_->DeclareProperty("height", height_, "Height (Y) of the detector - 6.0m").SetUnit("m");
+ det_mesg_->DeclareProperty("length", length_, "Width (Z) of the detector - 3.6m").SetUnit("m");
+}
 
 DetectorConstruction::~DetectorConstruction()
 {}
@@ -48,9 +54,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // DETECTOR //////////////////////////////////////////////
   // resemble an APA size
-  G4double detector_width   = 2.3*m;
-  G4double detector_height  = 6.0*m;
-  G4double detector_length  = 3.6*m;
+  G4double detector_width   = width_;
+  G4double detector_height  = height_;
+  G4double detector_length  = length_;
+
   G4Material* detector_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_lAr");
 
   // TODO: Setup messanger to activate/deactivate scintillation processses and the corresponding detectors
@@ -75,7 +82,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // General Light Properties
   lAr_MPT->AddProperty("RINDEX",energy, Rindex_lAr, 5);
   lAr_MPT->AddProperty("ABSLENGTH",energy, Abs_lAr,5);
-  lAr_MPT->AddProperty("RAYLEIGH",energy, Rayleigh_lAr, 5);
+  if(rayleigh_) lAr_MPT->AddProperty("RAYLEIGH",energy, Rayleigh_lAr,5);
   // Spectrum of Scinitllation light
   lAr_MPT->AddProperty("SCINTILLATIONCOMPONENT1", energy, Scint_lAr, 5);
   lAr_MPT->AddProperty("SCINTILLATIONCOMPONENT2", energy, Scint_lAr, 5);
@@ -128,6 +135,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // A sensitive area around the detector, enabeling the collection of the photons
   // Create 6 physical volumes for the 6 faces of the detector
   //////////////////////////////////////////////////////////
+
+  /* G4Material* photon_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_Fe"); */
+  /* G4double Rindex_photon[5] = {1.33, 1.35, 1.37, 1.43, 1.5}; // Refractive index for lAr (https://lar.bnl.gov/properties/#scint) */
+  /* G4MaterialPropertiesTable *photon_MPT = new G4MaterialPropertiesTable(); */
+  /* photon_MPT->AddProperty("RINDEX",energy,Rindex_photon,5); */
+  /* photon_mat->SetMaterialPropertiesTable(photon_MPT); */
+
+
+
+
   G4Box* photon_zy_vol = new G4Box("photon_zy_plane.solid",detector_length/2,detector_height/2,0.01*m);
   G4Box* photon_zx_vol = new G4Box("photon_zx_plane.solid",detector_width/2,detector_length/2,0.01*m);
   G4Box* photon_xy_vol = new G4Box("photon_xy_plane.solid",detector_height/2,detector_width/2,0.01*m);

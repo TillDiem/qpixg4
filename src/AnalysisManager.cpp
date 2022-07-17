@@ -332,10 +332,17 @@ void AnalysisManager::AddMCParticle(MCParticle const * particle)
 //-----------------------------------------------------------------------------
 void AnalysisManager::AddMCParticle_Photon(G4Step* aStep)
 {
-	photon_final_t_.push_back(aStep->GetPostStepPoint()->GetGlobalTime()*ns);
-	photon_final_x_.push_back(aStep->GetPostStepPoint()->GetPosition().x());
-	photon_final_y_.push_back(aStep->GetPostStepPoint()->GetPosition().y());
-	photon_final_z_.push_back(aStep->GetPostStepPoint()->GetPosition().z());
+	double x = aStep->GetPreStepPoint()->GetPosition().x();
+	double y = aStep->GetPreStepPoint()->GetPosition().y();
+	double z = aStep->GetPreStepPoint()->GetPosition().z();
+	// Fix stupid rounding issues with some of the geometries - TODO: fix more elegeantly
+	if(x < 1e-12) x = 0;
+	if(y < 1e-12) y = 0;
+	if(z < 1e-12) z = 0;
+	photon_final_t_.push_back(aStep->GetPreStepPoint()->GetGlobalTime()/CLHEP::ns);
+	photon_final_x_.push_back(x/CLHEP::cm);
+	photon_final_y_.push_back(y/CLHEP::cm);
+	photon_final_z_.push_back(z/CLHEP::cm);
 
 }
 

@@ -9,6 +9,7 @@
 #include "DetectorConstruction.h"
 #include "TrackingSD.h"
 #include "TrackingSD_Photon.h"
+#include "LArQL.h"
 
 #include "G4Box.hh"
 #include "G4LogicalVolume.hh"
@@ -72,9 +73,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // SOURCE for Rayleigh https://pure.royalholloway.ac.uk/portal/en/publications/calculation-and-measurement-of-the-rayleigh-scattering-length-of-the-scintillation-wavelength-of-liquid-argon-for-dark-matter-and-neutrino-detectors(be8cb174-d660-476c-82c7-051d30000fa8).html - some extrapolation
 
 //TODO Assumed 20.000 / MeV - has to be adjusted down the road for Voltage dependence etc
-  G4double energy_Scint[15] = {1.00000000e-02*MeV,  7.14378571e+01*MeV,  1.42865714e+02*MeV,  2.14293571e+02*MeV,  2.85721429e+02*MeV,  3.57149286e+02*MeV,  4.28577143e+02*MeV,  5.00005000e+02*MeV,  5.71432857e+02*MeV,  6.42860714e+02*MeV,  7.14288571e+02*MeV,  7.85716429e+02*MeV,  8.57144286e+02*MeV,  9.28572143e+02*MeV,  1.00000000e+03*MeV};
-  G4double ScintillationParticle[15]= {2.00000000e+02, 1.42875714e+06, 2.85731429e+06, 4.28587143e+06, 5.71442857e+06, 7.14298571e+06, 8.57154286e+06, 1.00001000e+07, 1.14286571e+07, 1.28572143e+07, 1.42857714e+07, 1.57143286e+07, 1.71428857e+07, 1.85714429e+07, 2.00000000e+07};
+  /* G4double energy_Scint[15] = {1.00000000e-02*MeV,  7.14378571e+01*MeV,  1.42865714e+02*MeV,  2.14293571e+02*MeV,  2.85721429e+02*MeV,  3.57149286e+02*MeV,  4.28577143e+02*MeV,  5.00005000e+02*MeV,  5.71432857e+02*MeV,  6.42860714e+02*MeV,  7.14288571e+02*MeV,  7.85716429e+02*MeV,  8.57144286e+02*MeV,  9.28572143e+02*MeV,  1.00000000e+03*MeV}; */
+  /* G4double ScintillationParticle[15]= {2.00000000e+02, 1.42875714e+06, 2.85731429e+06, 4.28587143e+06, 5.71442857e+06, 7.14298571e+06, 8.57154286e+06, 1.00001000e+07, 1.14286571e+07, 1.28572143e+07, 1.42857714e+07, 1.57143286e+07, 1.71428857e+07, 1.85714429e+07, 2.00000000e+07}; */
 
+  double *ScintillationParticle = LArQL(0.5, 15, 1e-2, 1e3);
+  double *energy_Scint = Energy(15, 1e-2, 1e3);
 
   // Time and Yields are taken from Anyssa - find nice source later
 
@@ -91,11 +94,15 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   lAr_MPT->AddConstProperty("SCINTILLATIONTIMECONSTANT1",7.*ns);
   lAr_MPT->AddConstProperty("SCINTILLATIONTIMECONSTANT2",1500.*ns);
   // Per Particle Scinitllation Light
+  // THIS IS REPLACED BY THE Q-PIX SCINTILLATION CLASS - BUT THEY STILL NEED TO BE SET DUE TO HOW THE SCINITLLATION CLASS ACCESES THE PROPERTIES TABLE
+  lAr_MPT->AddProperty("ELECTRONSCINTILLATIONYIELD", energy_Scint, ScintillationParticle, 15);
   lAr_MPT->AddProperty("ALPHASCINTILLATIONYIELD", energy_Scint, ScintillationParticle, 15);
   lAr_MPT->AddProperty("IONSCINTILLATIONYIELD", energy_Scint, ScintillationParticle, 15);
   lAr_MPT->AddProperty("PROTONSCINTILLATIONYIELD", energy_Scint, ScintillationParticle, 15);
-  lAr_MPT->AddProperty("ELECTRONSCINTILLATIONYIELD", energy_Scint, ScintillationParticle, 15);
+  lAr_MPT->AddProperty("DEUTERONSCINTILLATIONYIELD", energy_Scint, ScintillationParticle, 15);
   //Relative amount of scinitllation light in each component
+  lAr_MPT->AddConstProperty("DEUTERONSCINTILLATIONYIELD1", 0.75);
+  lAr_MPT->AddConstProperty("DEUTERONSCINTILLATIONYIELD2", 0.25);
   lAr_MPT->AddConstProperty("ALPHASCINTILLATIONYIELD1", 0.75);
   lAr_MPT->AddConstProperty("ALPHASCINTILLATIONYIELD2", 0.25);
   lAr_MPT->AddConstProperty("IONSCINTILLATIONYIELD1", 0.75);

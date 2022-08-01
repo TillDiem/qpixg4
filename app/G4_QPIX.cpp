@@ -19,11 +19,14 @@
 #include <G4UIExecutive.hh>
 #include <FTFP_BERT_HP.hh>
 #include <G4EmStandardPhysics_option4.hh>
-#include "G4OpticalPhysics.hh"
+#include "QPix_OpticalPhysics.h"
+#include "QPix_Scintillation.h"
+
 
 
 #include "Randomize.hh"
 #include "time.h"
+
 
 
 
@@ -49,15 +52,19 @@ int main(int argc, char** argv)
 
   G4VModularPhysicsList* physics_list = new FTFP_BERT_HP();
   physics_list->ReplacePhysics(new G4EmStandardPhysics_option4());
-  G4OpticalPhysics* optical_physics = new G4OpticalPhysics();
+ // G4OpticalPhysics* optical_physics = new G4OpticalPhysics();
+  QPix_OpticalPhysics* qpix_optical_physics = new QPix_OpticalPhysics();
+  //G4Scintillation* scintillation = new Scint();
+
 
   auto opticalParams = G4OpticalParameters::Instance();
-  opticalParams->SetScintTrackSecondariesFirst(true);
+  opticalParams->SetScintTrackSecondariesFirst(false);
   opticalParams->SetScintTrackInfo(true);
   //opticalParams->SetMaxNumPhotonsPerStep(100000);
   opticalParams->SetScintVerboseLevel(1);
   opticalParams->SetScintByParticleType(true);
-  physics_list->RegisterPhysics(optical_physics);
+  physics_list->RegisterPhysics(qpix_optical_physics);
+  //physics_list->RegisterPhysics(scintillation);
 
   run_manager->SetUserInitialization(physics_list);
 
@@ -68,6 +75,7 @@ int main(int argc, char** argv)
   run_manager->SetUserAction(new EventAction());
   run_manager->SetUserAction(new TrackingAction());
   run_manager->SetUserAction(new SteppingAction());
+
 
   // Initialize visualization
   G4VisManager* vismgr = new G4VisExecutive();

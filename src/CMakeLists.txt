@@ -23,7 +23,10 @@ SET(SRC   AnalysisManager.cpp
           TrackingSD_Photon.cpp
           TrackingHit.cpp
           Supernova.cpp
-          SupernovaTiming.cpp)
+          SupernovaTiming.cpp
+	  LArQL.cpp
+	  QPix_Scintillation.cpp
+	  QPix_OpticalPhysics.cpp)
 
 add_library(${CMAKE_PROJECT_NAME} SHARED ${SRC} QPixG4Dict.cxx)
 

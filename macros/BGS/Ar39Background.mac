@@ -1,0 +1,27 @@
+
+# set verbosity
+/control/verbose 1
+/run/verbose 1
+/tracking/verbose 0
+
+# configure supernova
+/Inputs/Particle_Type SUPERNOVA
+
+# output path
+/Inputs/root_output Ar39_background.root
+
+# initialize run
+/run/initialize
+/random/setSeeds 137 1000
+
+# event ID offset
+/event/offset 0
+
+# Supernova configs
+/Supernova/Event_Window 0.1 ms
+/Supernova/Event_Cutoff 0.1 ms
+
+/Supernova/N_Ar39_Decays 1
+
+# run
+/run/beamOn 10000

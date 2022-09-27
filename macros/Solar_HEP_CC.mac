@@ -13,7 +13,7 @@
 /Inputs/vertex_z 0.0 m
 
 # output path
-/Inputs/root_output /pc2014-data3/tdieminger/SoLAr_Env/qpixg4/output/marley_solar_HEP_CC.root
+/Inputs/root_output /pc2014-data3/tdieminger/SoLAr_Env/qpixg4/marley_solar_HEP_CC_new.root
 
 # initialize run
 /run/initialize

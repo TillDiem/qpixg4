@@ -29,7 +29,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 {
   // WORLD /////////////////////////////////////////////////
 
-  G4double world_size = 15.*m;
+  G4double world_size = 50.*m;
   G4Material* world_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
 
   G4Box* world_solid_vol =
@@ -45,9 +45,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // DETECTOR //////////////////////////////////////////////
   // resemble an APA size
-  G4double detector_width   = 2.3*m;
-  G4double detector_height  = 6.0*m;
-  G4double detector_length  = 3.6*m;
+  G4double detector_width   = 14.0*m;  //x
+  G4double detector_height  = 6.0*m;  // y
+  G4double detector_length  = 3.6*m; //z
   G4Material* detector_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_lAr");
 
   G4Box* detector_solid_vol =

@@ -2,6 +2,10 @@
 #include <iostream>
 
 double * LArQL(double ElectricField, int Granularity = 30, double EnergyRange_Low = 0.0, double EnergyRange_High = 10.0) {
+	std::cerr << "THIS SHIT IS BROKEN - FIX THE FORMULAS TO RETURN THE ACTUAL YIELD - NOT TOTAL AMOUNT OF PHOTONS" << std::endl;
+	std::cerr << " ALSO - THE OVERALL FORMULA IS WRONG :) " << std::endl;
+	std::cerr << " CHECK THE QPIXLS FOR THE CORRECT IMPLEMENTATION " << std::endl;
+	return 0;
 	  double A = 0.800;
 	  double k = 0.0486;
 	  double Wion = 23.6;
@@ -29,6 +33,11 @@ double * LArQL(double ElectricField, int Granularity = 30, double EnergyRange_Lo
 }
 
 double LArQL_MeanNumberPhotons(double energyDeposit, double stepWidth, double electricField){
+	std::cerr << "THIS SHIT IS BROKEN - FIX THE FORMULAS TO RETURN THE ACTUAL YIELD - NOT TOTAL AMOUNT OF PHOTONS" << std::endl;
+	std::cerr << " ALSO - THE OVERALL FORMULA IS WRONG :) " << std::endl;
+	std::cerr << " CHECK THE QPIXLS FOR THE CORRECT IMPLEMENTATION " << std::endl;
+	return 0;
+
 	  double A = 0.800;
 	  double k = 0.0486;
 	  double Wion = 23.6;
